@@ -1,2 +1,2 @@
-# spice_connect
-Launch your Spice session from this GUI using the Proxmox API
+# Simple Spice / Python / GUI spice_connect
+Launch your Spice Console session from here.
