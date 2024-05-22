@@ -23,7 +23,8 @@ def get_credentials_gui():
             messagebox.showerror("Error", "Could not complete request to backend, see console log")
             return
 
-        fqdn = 'ftp2.draftprosinc.com'
+        # Place FQDN
+        fqdn = '#'
 
         get_session = security_check(username, password)
         get_spice_session_info = get_spice_session(get_session[0], get_session[1], fqdn, vm_info[0], vm_info[1])
@@ -33,7 +34,7 @@ def get_credentials_gui():
         write_file.write("[virt-viewer]\n"
                          "host=" + get_spice_session_info['title'] + "\n"
                          "password=" + get_spice_session_info['password'] + "\n"
-                         "proxy=http://ftp2.draftprosinc.com:3128\n"
+                         "proxy=fqdn"
                          "delete-this-file=1\n"
                          "release-cursor=Ctrl+Alt+R\n"
                          "host-subject=" + get_spice_session_info['host-subject'] + "\n"
@@ -60,10 +61,10 @@ def get_credentials_gui():
     return
 
 def security_check(username, password):
-    login_url = "https://ftp2.draftprosinc.com:8006/api2/json/access/ticket"
+    login_url = "fqdn"
     login_response = requests.post(login_url, data={'username': username, 'password': password}, verify=False)
     if login_response.status_code == 200:
-        print("Authentication Successful\nPOST => https://ftp2.draftprosinc.com:8006/api2/json/access/ticket => Response = {0}".format(login_response.status_code))
+        print("Authentication Successful\nPOST => FQDN => Response = {0}".format(login_response.status_code))
     json_data = json.loads(login_response.text)
     access_keys = json_data.get('data')
     ticket = access_keys.get('ticket')
@@ -81,7 +82,7 @@ def get_spice_session(ticket_cookie, csrf_token, fqdn, pvenode, vmid):
     return spice_request.json()['data']
 
 def get_vmid(username, password):
-    fqdn = 'https://ftp2.draftprosinc.com:8006/api2/json/'
+    fqdn = 'FQDN'
     security_info = security_check(username, password)
     cookies = dict(PVEAuthCookie=security_info[0])
     headers = {'CSRFPreventionToken': security_info[1]}
